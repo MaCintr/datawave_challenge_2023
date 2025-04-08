@@ -1,0 +1,42 @@
+DROP TABLE bw_percepcao; COMMIT;
+DROP TABLE bw_acao_esg; COMMIT;
+DROP TABLE bw_consumidor; COMMIT;
+
+CREATE TABLE bw_consumidor (
+    id_consumidor NUMBER(5) NOT NULL,
+    nome          VARCHAR2(30) DEFAULT 'GUEST',
+    email         VARCHAR2(50) NOT NULL,
+    telefone      NUMBER(15),
+    idade         NUMBER(3) NOT NULL,
+    endereco      VARCHAR(50) NOT NULL,
+    CONSTRAINT consumidor_check CHECK (idade < 100 OR idade > 17)
+);
+
+ALTER TABLE bw_consumidor ADD CONSTRAINT consumidor_pk PRIMARY KEY ( id_consumidor );
+
+CREATE TABLE bw_percepcao (
+    id_percepcao   NUMBER(5) NOT NULL,
+    id_consumidor  NUMBER(5) NOT NULL,
+    id_acao        NUMBER(3) NOT NULL,
+    avaliacao      NUMBER(2) NOT NULL,
+    comentario     VARCHAR2(300)
+);
+
+ALTER TABLE bw_percepcao ADD CONSTRAINT percepcao_pk PRIMARY KEY ( id_percepcao );
+
+
+CREATE TABLE bw_acao_esg (
+    id_acao      NUMBER(3) NOT NULL,
+    ds_acao      VARCHAR2(100) NOT NULL
+);
+
+ALTER TABLE bw_acao_esg ADD CONSTRAINT acao_esg_pk PRIMARY KEY ( id_acao );
+
+ALTER TABLE bw_percepcao
+    ADD CONSTRAINT percepcao_consumidor_fk FOREIGN KEY ( id_consumidor )
+        REFERENCES bw_consumidor ( id_consumidor );
+        
+ALTER TABLE bw_percepcao
+    ADD CONSTRAINT percepcao_acao_fk FOREIGN KEY ( id_acao )
+        REFERENCES bw_acao_esg ( id_acao );
+     
